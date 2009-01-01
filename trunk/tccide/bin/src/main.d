@@ -1184,9 +1184,12 @@ class MainForm : dfl.form.Form {
 		}
 
 		char[][] sources;
+		
+		try { mkdir(rootPath ~ "\\bin\\temp"); } catch { }
 
 		foreach (item; project.sourceList.items) {
 			Source source = cast(Source)item;
+			if (source.name.length > 0 && source.name[0] == '.') continue;
 			char[] sourcePath = rootPath ~ "\\bin\\temp\\" ~ source.name;
 			sources ~= sourcePath;
 			write(sourcePath, source.data);
@@ -1274,7 +1277,10 @@ class Compiler {
 
 	void clean() {
 		char[] rpath = rootPath ~ "\\bin\\temp\\";
-		foreach (name; listdir(rpath)) std.file.remove(rpath ~ name);
+		foreach (name; listdir(rpath)) {
+			if (name == ".svn") continue;
+			try { std.file.remove(rpath ~ name); } catch { }
+		}
 	}
 
 	void compile(char[][] files) {
@@ -1316,6 +1322,7 @@ class Compiler {
 
 			char[] rcommand;
 
+			try { mkdir(rootPath ~ "\\bin\\temp\\"); } catch { }
 			chdir(rootPath ~ "\\bin\\temp\\");
 
 			ProgramPipe pp = new ProgramPipe(rcommand =
