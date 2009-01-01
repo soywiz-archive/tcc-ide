@@ -6,7 +6,7 @@ del /q tccide.map 2> NUL
 dfl -release src\*.d src\tccide.res -oftccide
 IF ERRORLEVEL 1 GOTO error
 if NOT EXIST tccide.exe GOTO end
-upx tccide.exe
+REM upx tccide.exe
 :end
 del /Q *.obj 2> NUL
 del /q tccide.map 2> NUL
